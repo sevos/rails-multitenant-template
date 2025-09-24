@@ -16,7 +16,7 @@ This Rails application template sets up a new Rails application with multitenanc
 ### Using with Rails New
 
 ```bash
-rails new myapp -m https://github.com/sevos/rails-multitenant-template/raw/main/template.rb
+rails new myapp -m https://github.com/sevos/rails-multitenant-template/raw/master/template.rb
 ```
 
 ### Local Usage
