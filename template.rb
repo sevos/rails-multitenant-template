@@ -7,6 +7,10 @@ gem_group :development do
   gem 'tidewave'
 end
 
+gem_group :test do
+  gem 'mocha'
+end
+
 # Create opencode.json
 create_file 'opencode.json' do
   <<~JSON
@@ -115,7 +119,7 @@ create_file 'app/models/account.rb' do
       # Include WithDatabase concern for tenant creation/destruction hooks.
       include Account::WithDatabase
 
-      validates :tenant_id, presence: true, format: { with: /\A[a-z0-9]+\z/, message: "must be lowercase alphanumeric" }
+      validates :tenant_id, presence: true, format: { with: %r{\\A[a-z0-9-]+\\z}, message: "must be lowercase alphanumeric and dashes" }
     end
   RUBY
 end
@@ -462,6 +466,9 @@ create_file 'test/controllers/admin/accounts_controller_test.rb' do
     end
   RUBY
 end
+
+# Update test_helper to include mocha
+insert_into_file 'test/test_helper.rb', "\nrequire \"mocha/minitest\"", after: 'require "rails/test_help"'
 
 # Create test fixtures
 create_file 'test/fixtures/accounts.yml' do
