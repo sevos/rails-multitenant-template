@@ -299,7 +299,7 @@ create_file 'app/views/layouts/admin.html.erb' do
         <%= javascript_importmap_tags %>
       </head>
 
-      <body class="bg-gray-800">
+      <body class="bg-base-200">
         <main class="w-full mt-28 px-5">
           <%= yield %>
         </main>
@@ -311,34 +311,36 @@ end
 # Create accounts index view
 create_file 'app/views/admin/accounts/index.html.erb' do
   <<~HTML
-    <div class="bg-gray-900 rounded-lg p-4 md:p-6 shadow-lg w-full max-w-7xl mx-auto">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
-        <h1 class="text-xl md:text-2xl font-bold text-white">Accounts</h1>
-        <%= link_to 'New Account', new_admin_account_path, class: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-sm md:text-base' %>
-      </div>
+    <div class="card bg-base-100 shadow-xl w-full max-w-7xl mx-auto">
+      <div class="card-body">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
+          <h2 class="card-title text-xl md:text-2xl">Accounts</h2>
+          <%= link_to 'New Account', new_admin_account_path, class: 'btn btn-primary btn-sm md:btn-md' %>
+        </div>
 
-      <div class="overflow-x-auto">
-        <table class="min-w-full bg-gray-800 rounded-lg overflow-hidden">
-          <thead class="bg-gray-700">
-            <tr>
-              <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Tenant ID</th>
-              <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-600">
-            <% @accounts.each do |account| %>
-              <tr class="hover:bg-gray-700">
-                <td class="px-3 md:px-6 py-4 whitespace-nowrap text-sm text-gray-300"><%= account.tenant_id %></td>
-                <td class="px-3 md:px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                    <%= link_to 'Edit', edit_admin_account_path(account), class: 'text-yellow-400 hover:text-yellow-300' %>
-                    <%= link_to 'Destroy', admin_account_path(account), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'text-red-400 hover:text-red-300' %>
-                  </div>
-                </td>
+        <div class="overflow-x-auto">
+          <table class="table table-zebra">
+            <thead>
+              <tr>
+                <th>Tenant ID</th>
+                <th>Actions</th>
               </tr>
-            <% end %>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <% @accounts.each do |account| %>
+                <tr>
+                  <td><%= account.tenant_id %></td>
+                  <td>
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                      <%= link_to 'Edit', edit_admin_account_path(account), class: 'btn btn-ghost btn-xs' %>
+                      <%= link_to 'Destroy', admin_account_path(account), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-ghost btn-xs text-error' %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   HTML
@@ -347,12 +349,11 @@ end
 # Create accounts new view
 create_file 'app/views/admin/accounts/new.html.erb' do
   <<~HTML
-    <div class="bg-gray-900 rounded-lg p-4 md:p-6 shadow-lg w-full max-w-2xl mx-auto">
-      <div class="mb-6">
-        <h1 class="text-xl md:text-2xl font-bold text-white">New Account</h1>
+    <div class="card bg-base-100 shadow-xl w-full max-w-2xl mx-auto">
+      <div class="card-body">
+        <h2 class="card-title text-xl md:text-2xl mb-4">New Account</h2>
+        <%= render "form", account: @account %>
       </div>
-
-      <%= render "form", account: @account %>
     </div>
   HTML
 end
@@ -360,12 +361,11 @@ end
 # Create accounts edit view
 create_file 'app/views/admin/accounts/edit.html.erb' do
   <<~HTML
-    <div class="bg-gray-900 rounded-lg p-4 md:p-6 shadow-lg w-full max-w-2xl mx-auto">
-      <div class="mb-6">
-        <h1 class="text-xl md:text-2xl font-bold text-white">Edit Account</h1>
+    <div class="card bg-base-100 shadow-xl w-full max-w-2xl mx-auto">
+      <div class="card-body">
+        <h2 class="card-title text-xl md:text-2xl mb-4">Edit Account</h2>
+        <%= render "form", account: @account %>
       </div>
-
-      <%= render "form", account: @account %>
     </div>
   HTML
 end
@@ -373,33 +373,40 @@ end
 # Create accounts form partial
 create_file 'app/views/admin/accounts/_form.html.erb' do
   <<~HTML
-    <%= form_with(model: account, url: account.persisted? ? admin_account_path(account) : admin_accounts_path, class: 'space-y-4 md:space-y-6') do |form| %>
+    <%= form_with(model: account, url: account.persisted? ? admin_account_path(account) : admin_accounts_path) do |form| %>
       <% if account.errors.any? %>
-        <div class="bg-red-900 border border-red-700 rounded-md p-3 md:p-4">
-          <h3 class="text-sm font-medium text-red-400">
-            <%= pluralize(account.errors.count, "error") %> prohibited this account from being saved:
-          </h3>
-          <div class="mt-2 text-sm text-red-300">
-            <ul role="list" class="list-disc pl-5 space-y-1">
+        <div role="alert" class="alert alert-error mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div>
+            <h3 class="font-bold">
+              <%= pluralize(account.errors.count, "error") %> prohibited this account from being saved:
+            </h3>
+            <ul class="list-disc list-inside mt-2">
               <% account.errors.each do |error| %>
-                <li><%= error.full_message %></li>
+                <li class="text-sm"><%= error.full_message %></li>
               <% end %>
             </ul>
           </div>
         </div>
       <% end %>
 
-      <div>
-        <%= form.label :tenant_id, class: 'block text-sm font-medium text-gray-300' %>
-        <%= form.text_field :tenant_id, readonly: account.persisted?, class: 'mt-1 block w-full bg-gray-800 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 read-only:text-gray-400 text-sm md:text-base' %>
+      <fieldset class="fieldset">
+        <label class="label">
+          <span class="label-text">Tenant ID</span>
+        </label>
+        <%= form.text_field :tenant_id, readonly: account.persisted?, class: 'input input-bordered w-full', placeholder: 'dev' %>
         <% if account.persisted? %>
-          <p class="mt-1 text-xs md:text-sm text-gray-400">Tenant ID cannot be changed after creation</p>
+          <label class="label">
+            <span class="label-text-alt">Tenant ID cannot be changed after creation</span>
+          </label>
         <% end %>
-      </div>
+      </fieldset>
 
-      <div class="flex justify-end space-x-3">
-        <%= link_to 'Cancel', admin_accounts_path, class: 'bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md font-medium' %>
-        <%= form.submit class: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900' %>
+      <div class="flex justify-end space-x-2 mt-6">
+        <%= link_to 'Cancel', admin_accounts_path, class: 'btn btn-ghost' %>
+        <%= form.submit class: 'btn btn-primary' %>
       </div>
     <% end %>
   HTML
