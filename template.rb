@@ -486,5 +486,24 @@ end
 # Install TailwindCSS
 run 'rails tailwindcss:install'
 
+# Download DaisyUI files
+run 'curl -sLo app/assets/tailwind/daisyui.mjs https://github.com/saadeghi/daisyui/releases/latest/download/daisyui.mjs'
+run 'curl -sLo app/assets/tailwind/daisyui-theme.mjs https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.mjs'
+
+# Configure DaisyUI in Tailwind
+append_to_file 'app/assets/tailwind/application.css' do
+  <<~CSS
+
+    @source not "./daisyui{,*}.mjs";
+
+    @plugin "./daisyui.mjs";
+
+    /* Optional for custom themes – Docs: https://daisyui.com/docs/themes/#how-to-add-a-new-custom-theme */
+    @plugin "./daisyui-theme.mjs"{
+      /* custom theme here */
+    }
+  CSS
+end
+
 # Run bundle install
 run 'bundle install'
