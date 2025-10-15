@@ -11,17 +11,22 @@ gem_group :test do
   gem 'mocha'
 end
 
-# Create opencode.json
-create_file 'opencode.json' do
+# Create Claude Code MCP configuration
+create_file '.mcp.json' do
   <<~JSON
     {
-      "$schema": "https://opencode.ai/config.json",
-      "mcp": {
+      "mcpServers": {
+        "chrome-devtools": {
+          "type": "stdio",
+          "command": "npx",
+          "args": [
+            "chrome-devtools-mcp@latest"
+          ],
+          "env": {}
+        },
         "tidewave": {
-          "type": "remote",
-          "url": "http://localhost:3000/tidewave/mcp",
-          "enabled": true,
-          "headers": {}
+          "type": "sse",
+          "url": "http://localhost:3000/tidewave/mcp"
         }
       }
     }

@@ -6,7 +6,7 @@ This Rails application template sets up a new Rails application with multitenanc
 
 - **Multitenancy**: Database-level multitenancy with `activerecord-tenanted` gem
 - **Styling**: TailwindCSS with dark mode support
-- **AI Integration**: OpenCode configuration and Tidewave gem for development
+- **AI Integration**: Claude Code MCP configuration and Tidewave gem for development
 - **Admin Interface**: CRUD interface for managing accounts/tenants
 - **Testing**: Mocha for mocking in tests
 - **Modern Rails**: Uses Rails 8.1 with Propshaft, Turbo, Stimulus, etc.
@@ -55,7 +55,7 @@ rails new myapp -m rails-multitenant-template/template.rb
 - Tenancy initializer with subdomain-based tenant resolution
 - Host configuration for development
 - Seeds for default "dev" tenant
-- OpenCode for AI coding assistant integration
+- Claude Code MCP servers configuration for AI coding assistant integration
 
 ### Tests
 - Controller tests with Mocha mocking
