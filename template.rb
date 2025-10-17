@@ -1,7 +1,7 @@
 # Rails application template for multitenant application with TailwindCSS and activerecord-tenanted
 
 # Add gems
-gem 'activerecord-tenanted', '~> 0.4.1'
+gem 'activerecord-tenanted', '~> 0.5.0'
 gem 'tailwindcss-rails'
 gem_group :development do
   gem 'tidewave'
